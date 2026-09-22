@@ -9,15 +9,11 @@
 
 ## Project Description
 
-The Perishable Crop Queue Management System is a full-stack web
-application designed to manage harvested perishable crop batches
-and reduce crop wastage.
+The Perishable Crop Queue Management System is a full-stack web application designed to manage harvested perishable crop batches and reduce crop wastage.
 
-Farm managers can register crop batches with crop name, quantity,
-harvest date, expiry date, and storage location.
+Farm managers can register crop batches with information such as crop name, quantity, harvest date, expiry date, and storage location.
 
-The system uses First-In, First-Out (FIFO) processing so that older
-harvested crop batches are distributed before newer batches.
+The system uses First-In, First-Out (FIFO) distribution so that older harvested crop batches are prioritized before newer crop batches.
 
 ## Developer Responsibilities
 
