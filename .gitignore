@@ -1,26 +1,38 @@
-# Perishable Crop Queue Management System
+# Dependencies
+node_modules/
 
-University DevOps Engineering Module Project
+# Environment variables
+.env
+.env.local
+.env.*.local
 
-## Developers
+# Builds
+dist/
+build/
 
-- Nikarsan
-- Chandima
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-## Description
+# Test coverage
+coverage/
 
-The Perishable Crop Queue Management System is a web application
-for managing harvested perishable crop batches and their distribution.
+# IDE
+.vscode/
+.idea/
 
-The system uses FIFO (First-In, First-Out) processing to prioritize
-older harvested crop batches during distribution and help reduce
-crop wastage.
+# Operating System
+.DS_Store
+Thumbs.db
 
-## Phase 1 Technology Stack
+# Terraform - Phase 3
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
 
-- React.js
-- Node.js
-- Express.js
-- MySQL
-- Git
-- GitHub
+# Private keys
+*.pem
+*.key
