@@ -1,9 +1,32 @@
 import { amount, expiryLabel, formatDate } from "../utils/format.js";
+import Icon from "./Icon.jsx";
 
-export function PageHeading({ eyebrow, title, description, children }) {
+export function PageHeading({
+  eyebrow,
+  title,
+  description,
+  children,
+  hero = false,
+}) {
   return (
-    <header className="page-heading">
-      <div>
+    <header
+      className={`page-heading ${hero ? "hero-heading" : "compact-heading"}`}
+    >
+      <div className="hero-location">
+        <Icon name="pin" size={18} />
+        <span>
+          <strong>Sri Lanka</strong>
+          <time dateTime={new Date().toISOString()}>
+            {new Intl.DateTimeFormat("en-GB", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              timeZone: "Asia/Colombo",
+            }).format(new Date())}
+          </time>
+        </span>
+      </div>
+      <div className="heading-copy">
         <p className="eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <p className="subtitle">{description}</p>
@@ -48,23 +71,39 @@ export function ResourceState({ loading, error, retry }) {
 export function EmptyState({ title, children }) {
   return (
     <div className="empty-state">
-      <span className="empty-mark" aria-hidden="true">
-        CQ
-      </span>
+      <img
+        className="empty-art"
+        src={`${import.meta.env.BASE_URL}images/sri-lanka-harvest-crate.png`}
+        alt=""
+        width="230"
+        height="205"
+        loading="lazy"
+      />
       <h3>{title}</h3>
       {children}
     </div>
   );
 }
 
-export function StatusBadge({ status }) {
-  return (
-    <span
-      className={`badge ${status === "AVAILABLE" ? "available" : "distributed"}`}
-    >
-      {status === "AVAILABLE" ? "Available" : "Distributed"}
-    </span>
-  );
+export function StatusBadge({ status, expiry }) {
+  const label = expiry ? expiryLabel(expiry) : null;
+  const tone =
+    status === "DISTRIBUTED"
+      ? "distributed"
+      : label?.className === "danger-text"
+        ? "expired"
+        : label?.className === "warning-text"
+          ? "near-expiry"
+          : "available";
+  const text =
+    tone === "distributed"
+      ? "Distributed"
+      : tone === "expired"
+        ? "Past expiry"
+        : tone === "near-expiry"
+          ? "Near expiry"
+          : "Available";
+  return <span className={`badge ${tone}`}>{text}</span>;
 }
 
 export function ExpiryDate({ value, active = true }) {

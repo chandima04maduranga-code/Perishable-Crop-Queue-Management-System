@@ -1,6 +1,8 @@
 import useResource from "../hooks/useResource.js";
 import { readData } from "../services/api.js";
 import { amount, formatTime } from "../utils/format.js";
+import CropIcon from "../components/CropIcon.jsx";
+import Icon from "../components/Icon.jsx";
 import {
   EmptyState,
   PageHeading,
@@ -23,6 +25,7 @@ export default function DistributionHistory() {
           onClick={reload}
           disabled={loading}
         >
+          <Icon name="refresh" size={18} />
           Refresh
         </button>
       </PageHeading>
@@ -30,7 +33,10 @@ export default function DistributionHistory() {
       {data && (
         <div className="panel table-panel">
           <div className="table-summary">
-            <strong>{data.length} distribution records</strong>
+            <strong>
+              {data.length} distribution{" "}
+              {data.length === 1 ? "record" : "records"}
+            </strong>
             <span>
               {amount(
                 data.reduce((sum, item) => sum + Number(item.quantity), 0),
@@ -57,7 +63,10 @@ export default function DistributionHistory() {
                       <td className="muted">#{item.id}</td>
                       <td>#{item.crop_batch_id}</td>
                       <td>
-                        <strong>{item.crop_name}</strong>
+                        <div className="crop-cell">
+                          <CropIcon name={item.crop_name} />
+                          <strong>{item.crop_name}</strong>
+                        </div>
                       </td>
                       <td>{amount(item.quantity)} kg</td>
                       <td>{formatTime(item.distributed_at)}</td>

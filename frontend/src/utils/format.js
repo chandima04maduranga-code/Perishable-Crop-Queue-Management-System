@@ -54,3 +54,7 @@ export function expiryLabel(value) {
     return { text: `Expires in ${difference} days`, className: "warning-text" };
   return { text: `${difference} days remaining`, className: "muted" };
 }
+
+export function nearExpiry(value) {
+  return expiryLabel(value).className === "warning-text";
+}
