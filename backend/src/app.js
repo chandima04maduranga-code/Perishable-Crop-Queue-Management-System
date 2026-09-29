@@ -35,6 +35,26 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+
+
+const authRoutes = require(
+  "./routes/authRoutes"
+);
+
+const userRoutes = require(
+  "./routes/userRoutes"
+);
+
+app.use(
+  "/api/auth",
+  authRoutes
+);
+
+app.use(
+  "/api/users",
+  userRoutes
+);
+
 app.use("/api/crops", cropRoutes);
 
 app.use(

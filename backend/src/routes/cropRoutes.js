@@ -1,15 +1,66 @@
 const express = require("express");
-const cropController = require("../controllers/cropController");
+
+const cropController = require(
+  "../controllers/cropController"
+);
+
+const authenticate = require(
+  "../middleware/authenticate"
+);
+
+const authorize = require(
+  "../middleware/authorize"
+);
 
 const router = express.Router();
 
-router.post("/", cropController.createCrop);
-router.get("/", cropController.getAllCrops);
 
-router.get("/next", cropController.getNextCrop);
+// PUBLIC
+router.get(
+  "/",
+  cropController.getAllCrops
+);
 
-router.get("/:id", cropController.getCropById);
-router.put("/:id", cropController.updateCrop);
-router.delete("/:id", cropController.deleteCrop);
+router.get(
+  "/next",
+  cropController.getNextCrop
+);
+
+router.get(
+  "/:id",
+  cropController.getCropById
+);
+
+
+// FARM MANAGER / ADMIN
+router.post(
+  "/",
+  authenticate,
+  authorize(
+    "ADMIN",
+    "FARM_MANAGER"
+  ),
+  cropController.createCrop
+);
+
+router.put(
+  "/:id",
+  authenticate,
+  authorize(
+    "ADMIN",
+    "FARM_MANAGER"
+  ),
+  cropController.updateCrop
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  authorize(
+    "ADMIN",
+    "FARM_MANAGER"
+  ),
+  cropController.deleteCrop
+);
 
 module.exports = router;
