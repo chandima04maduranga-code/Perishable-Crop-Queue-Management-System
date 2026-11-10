@@ -36,3 +36,7 @@ Thumbs.db
 # Private keys
 *.pem
 *.key
+
+# CropQueue local Docker deployment secrets
+.env.deploy
+
