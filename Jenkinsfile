@@ -86,6 +86,14 @@ pipeline {
                 '''
             }
         }
+        stage('Authentication and Authorization Security Tests') {
+            steps {
+                sh '''
+                    echo "Running JWT and RBAC security tests..."
+                    docker run --rm -v "$PWD/backend/test:/app/test:ro" --entrypoint node "cropqueue-backend:ci-${BUILD_NUMBER}" --test /app/test/authSecurity.test.js
+                '''
+            }
+        }
 
         stage('Build Frontend Image') {
             steps {
