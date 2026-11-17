@@ -33,6 +33,20 @@ pipeline {
             }
         }
 
+	stage('FIFO Unit Tests') {
+    steps {
+        sh '''
+            echo "Running CropQueue FIFO unit tests..."
+
+            docker run --rm \
+              -v "$PWD/backend:/app:ro" \
+              -w /app \
+              node:22-alpine \
+              node --test test/distributionService.test.js
+        '''
+    }
+}
+
         stage('Backend Dependency Security Scan') {
             steps {
                 sh '''
