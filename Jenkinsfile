@@ -9,6 +9,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout GitHub') {
             steps {
                 checkout scm
@@ -18,11 +19,13 @@ pipeline {
         stage('Verify Project Files') {
             steps {
                 sh '''
-                    echo "Checking CropQueue project..."
+                    echo "Checking CropQueue project files..."
 
                     test -f backend/Dockerfile
                     test -f frontend/Dockerfile
                     test -f docker-compose.yml
+                    test -f backend/package-lock.json
+                    test -f frontend/package-lock.json
 
                     echo "Project files verified!"
                     git rev-parse --short HEAD
@@ -30,10 +33,39 @@ pipeline {
             }
         }
 
+        stage('Backend Dependency Security Scan') {
+            steps {
+                sh '''
+                    echo "Scanning backend npm dependencies..."
+
+                    docker run --rm \
+                      -v "$PWD/backend:/app:ro" \
+                      -w /app \
+                      node:22-alpine \
+                      npm audit --audit-level=moderate
+                '''
+            }
+        }
+
+        stage('Frontend Dependency Security Scan') {
+            steps {
+                sh '''
+                    echo "Scanning frontend npm dependencies..."
+
+                    docker run --rm \
+                      -v "$PWD/frontend:/app:ro" \
+                      -w /app \
+                      node:22-alpine \
+                      npm audit --audit-level=moderate
+                '''
+            }
+        }
+
         stage('Build Backend Image') {
             steps {
                 sh '''
-                    echo "Building CropQueue Backend..."
+                    echo "Building CropQueue backend..."
+
                     docker build \
                       -t cropqueue-backend:ci-${BUILD_NUMBER} \
                       ./backend
@@ -44,7 +76,8 @@ pipeline {
         stage('Build Frontend Image') {
             steps {
                 sh '''
-                    echo "Building CropQueue Frontend..."
+                    echo "Building CropQueue frontend..."
+
                     docker build \
                       -t cropqueue-frontend:ci-${BUILD_NUMBER} \
                       ./frontend
@@ -63,7 +96,7 @@ pipeline {
                       cropqueue-frontend:ci-${BUILD_NUMBER} \
                       > /dev/null
 
-                    echo "Both Docker images built successfully!"
+                    echo "Both Docker images verified!"
                 '''
             }
         }
@@ -71,11 +104,11 @@ pipeline {
 
     post {
         success {
-            echo 'CropQueue CI Docker build SUCCESS!'
+            echo 'CropQueue CI + Dependency Security Scans SUCCESS!'
         }
 
         failure {
-            echo 'CropQueue CI build FAILED!'
+            echo 'CropQueue CI/CD FAILED! Check build or security scan.'
         }
     }
 }
